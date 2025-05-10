@@ -28,8 +28,16 @@ defmodule Advent do
   end
 
   def day_02_part_2() do
-    # InputLists.reports()
-    "test"
+    InputLists.reports()
+    |> Enum.reduce(0, fn report, acc ->
+      safe? =
+        safe?(report) or
+          Enum.any?(0..length(report), fn i ->
+            safe?(List.delete_at(report, i))
+          end)
+
+      if safe?, do: acc + 1, else: acc
+    end)
   end
 
   def safe?([one, one | _tail]), do: false
