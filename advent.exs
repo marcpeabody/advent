@@ -1,5 +1,6 @@
 defmodule Advent do
-  def day_01(list_one, list_two) do
+  def day_01_part_1(list_one, list_two) do
+    # Calculating the distance between lists
     list_one = Enum.sort(list_one)
     list_two = Enum.sort(list_two)
 
@@ -9,15 +10,19 @@ defmodule Advent do
     end)
   end
 
-  def day_02(_list_one, _list_two) do
+  def day_01_part_2(list_one, list_two) do
+    # Calculating frequencies score
+    counts_one = Enum.frequencies(list_one)
+    counts_two = Enum.frequencies(list_two)
+
+    Enum.reduce(counts_one, 0, fn {number, freq}, acc ->
+      acc + number * freq * Map.get(counts_two, number, 0)
+    end)
   end
 end
-
-# [_this_file | _days] = System.argv()
 
 _ = Code.require_file("input_lists.ex")
 {list_one, list_two} = InputLists.lists()
 
-# file_name = "day_#{String.pad_leading(i, 2, "0")}.exs"
-IO.inspect("Day 01: #{Advent.day_01(list_one, list_two)}")
-IO.inspect("Day 02: #{Advent.day_02(list_one, list_two)}")
+IO.inspect("Day 01 part 1: #{Advent.day_01_part_1(list_one, list_two)}")
+IO.inspect("Day 01 part 2: #{Advent.day_01_part_2(list_one, list_two)}")
