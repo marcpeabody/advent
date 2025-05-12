@@ -21,4 +21,8 @@ defmodule InputLists do
       |> Enum.map(&String.to_integer/1)
     end)
   end
+
+  def corruption do
+    File.read!("day03_input.txt")
+  end
 end

@@ -67,6 +67,37 @@ defmodule Advent do
   end
 
   def safe?([_], _direction), do: true
+
+  def day_03_part_1() do
+    data = InputLists.corruption()
+
+    ~r/mul\((\d{1,3}),(\d{1,3})\)/
+    |> Regex.scan(data)
+    |> Enum.reduce(0, fn [_, num1, num2], acc ->
+      acc + String.to_integer(num1) * String.to_integer(num2)
+    end)
+  end
+
+  def day_03_part_2() do
+    data = InputLists.corruption()
+
+    ~r/mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)/
+    |> Regex.scan(data)
+    |> Enum.reduce({true, 0}, fn
+      ["do()"], {_, sum} ->
+        {true, sum}
+
+      ["don't()"], {_, sum} ->
+        {false, sum}
+
+      [_mul, num1, num2], {true, sum} ->
+        {true, sum + String.to_integer(num1) * String.to_integer(num2)}
+
+      [_mul, _num1, _num2], acc ->
+        acc
+    end)
+    |> elem(1)
+  end
 end
 
 _ = Code.require_file("input_lists.ex")
@@ -76,3 +107,5 @@ IO.inspect("Day 01 part 1: #{Advent.day_01_part_1(list_one, list_two)}")
 IO.inspect("Day 01 part 2: #{Advent.day_01_part_2(list_one, list_two)}")
 IO.inspect("Day 02 part 1: #{Advent.day_02_part_1()}")
 IO.inspect("Day 02 part 2: #{Advent.day_02_part_2()}")
+IO.inspect("Day 03 part 1: #{Advent.day_03_part_1()}")
+IO.inspect("Day 03 part 2: #{Advent.day_03_part_2()}")
