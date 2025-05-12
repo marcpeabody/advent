@@ -98,6 +98,42 @@ defmodule Advent do
     end)
     |> elem(1)
   end
+
+  def day_04_part_1() do
+    crossword = InputLists.crossword()
+
+    x_range = 0..length(crossword)
+    y_range = 0..length(Enum.at(crossword, 0))
+    xmas = ["X", "M", "A", "S"]
+    directions = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]]
+
+    Enum.reduce(x_range, 0, fn x, row_acc ->
+      Enum.reduce(y_range, row_acc, fn y, cell_acc ->
+        Enum.reduce(directions, cell_acc, fn direction, acc ->
+          acc + find_word(crossword, xmas, x, y, direction)
+        end)
+      end)
+    end)
+  end
+
+  def find_word(_crossword, [], _x, _y, _direction), do: 0
+  def find_word(_crossword, _word, x, y, _direction) when x < 0 or y < 0, do: 0
+
+  def find_word(crossword, [next_letter | rest] = _word, x, y, direction) do
+    with row when is_list(row) <- Enum.at(crossword, x),
+         letter when is_binary(letter) <- Enum.at(row, y),
+         true <- letter == next_letter do
+      if rest == [] do
+        1
+      else
+        [x_delta, y_delta] = direction
+        find_word(crossword, rest, x + x_delta, y + y_delta, direction)
+      end
+    else
+      _ ->
+        0
+    end
+  end
 end
 
 _ = Code.require_file("input_lists.ex")
@@ -109,3 +145,4 @@ IO.inspect("Day 02 part 1: #{Advent.day_02_part_1()}")
 IO.inspect("Day 02 part 2: #{Advent.day_02_part_2()}")
 IO.inspect("Day 03 part 1: #{Advent.day_03_part_1()}")
 IO.inspect("Day 03 part 2: #{Advent.day_03_part_2()}")
+IO.inspect("Day 04 part 1: #{Advent.day_04_part_1()}")

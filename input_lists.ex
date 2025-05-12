@@ -25,4 +25,10 @@ defmodule InputLists do
   def corruption do
     File.read!("day03_input.txt")
   end
+
+  def crossword do
+    File.read!("day04_input.txt")
+    |> String.split("\n")
+    |> Enum.map(&String.graphemes/1)
+  end
 end
